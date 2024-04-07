@@ -1,0 +1,409 @@
+:root {
+    --card-background-color: rgb(244, 244, 244);
+    --border-color: rgb(200, 200, 200);
+    --error-color: rgb(242, 86, 86);
+    --height: 100px;
+}
+body {
+    margin: 0;
+}
+
+
+/* Card */
+.card {
+    display: flex;
+    margin-top: 60px;
+    flex-direction: column;
+    width: 332px;
+    background-color: var(--card-background-color);
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    padding: 20px 40px;
+}
+.card h1 {
+    align-self: center;
+}
+.card button{
+    position: relative;
+    margin-bottom: 10px;
+    color: white;
+    background: blue;
+    border: none;
+    width: 250px;
+    padding: 12px;
+    text-align: left;
+    transition: all 0.2s;
+    top: 0;
+    cursor: pointer;
+}
+.card button:hover{
+    background-color: rgb(62, 62, 255);
+    top: -3px;
+}
+.card button:active{
+    top: 0;
+}
+
+
+/* Styling Input Field */
+:focus {
+    outline: none;
+}
+.inputField {
+    margin-bottom: -25px;
+}
+.inputField input {
+    width: 250px;
+    padding: 12px;
+    border: 1.6px solid var(--border-color);
+    background: var(--card-background-color);
+    transition: all 0.2s;
+}
+.inputField input + p {
+    background: var(--card-background-color);
+    color: rgb(170, 170, 170);
+    display: inline-block;
+    position: relative;
+    pointer-events: none;
+    padding: 0 4px;
+    transition: all 0.2s;
+    left: 10px;
+    top: -45px;
+}
+.inputField input:focus {
+    border-color: blue;
+    box-shadow: 0 0 2px 2px rgba(0, 0, 255, 0.190);
+}
+.inputField input:focus + p{
+    color: blue;
+    top: -65px;
+}
+.inputField input:not(:placeholder-shown) + p {
+    top: -65px;
+}
+.inputField img {
+    cursor: pointer;
+    position: relative;
+    top: -37px;
+    left: 132px;
+    z-index: 2;
+    width: 23px;
+}
+
+
+/* Input Field Error/Notification */
+#inputFieldError, #inputFieldNotification {
+    display: flex;
+    flex-direction: column;
+}
+#inputFieldError input {
+    border-color: var(--error-color);
+    box-shadow: 0 0 2px 2px rgba(242, 86, 86, 0.190);
+}
+#inputFieldError input + p {
+    color: var(--error-color);
+}
+#inputFieldError textarea{  
+    border-color: var(--error-color);
+    box-shadow: 0 0 2px 2px rgba(242, 86, 86, 0.190);
+}
+#inputFieldError textarea + p {
+    color: var(--error-color);
+}
+#inputFieldError .shadow {
+    border: 1.9px solid var(--error-color);
+    box-shadow: inset 0 0 15px 15px rgba(242, 86, 86, 0.2);
+}
+#inputFieldError button:hover {  
+    background-color: rgb(57, 57, 57);
+}
+#inputFieldNotification input {
+    border-color: blue;
+    box-shadow: 0 0 2px 2px rgba(0, 0, 255, 0.190);
+}
+#inputFieldNotification input + p {
+    color: blue;
+}
+#inputFieldNotification .errorMessage {
+    background-color: blue;
+}
+
+
+/* Error message */
+.card .errorMessage{
+    text-align: left;
+    margin-top: -19px;
+    font-size: 15px;
+    margin-bottom: 24px;
+    padding-left: 3px;
+    padding-top: 2.5px;
+    width: 250px;
+    color: white;
+    background-color: var(--error-color);
+    position: relative;
+    display: none;
+}
+#inputFieldError .errorMessage, #inputFieldNotification .errorMessage{
+    display: block;
+}
+.errorMessage .verifyLink {
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+    padding-top: 3px;
+    color: white;
+}
+.errorMessage .verifyLink:hover {
+    background-color: rgb(243, 127, 127);
+    border-right: 4px solid var(--card-background-color);
+    border-left: 4px solid var(--card-background-color);
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+
+/* Add Info */
+.profilePic {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+.profilePic .shadow {
+    align-self: center;
+    position: absolute;
+    border: 1.6px solid var(--border-color);
+    box-shadow: inset 0 0 8px 2px rgba(0, 0, 0, 0);
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    transition: all 0.2s;
+}
+.profilePic img {
+    align-self: center;
+    border-radius: 50%;
+    width: 100px;
+    transition: all 0.2s;
+}
+.profilePic img + button {
+    margin-top: -9px;
+    position: absolute;
+    align-self: center;
+    text-align: center;
+    background-color: rgb(44, 44, 44);
+    border: 2px solid var(--card-background-color);
+    padding: 0;
+    height: 30px;
+    border-radius: 15px;
+    top: 189px;
+    width: 45px;
+}
+.profilePic img + button:hover {
+    background-color: blue;
+    top: 192px;
+}
+.profilePic:has(button:hover) .shadow {
+    border: 1.9px solid blue;
+    box-shadow: inset 0 0 15px 15px rgba(190, 190, 255, 0.6);
+}
+.profilePic p {
+    margin-top: -25px;
+    align-self: center;
+    text-align: center;
+}
+.profilePic input[type='file'] {
+    display: none;
+}
+.skip {
+    margin-top: -10px;
+    display: flex;
+    gap: 5px;
+}
+.skip button {
+    text-align: left;
+    flex: 10;
+}
+.skip .skipButton {
+    flex: 1;
+}
+.skip button:disabled {
+    background-color: rgb(201, 198, 198);
+    pointer-events: none;
+    color: rgb(130, 130, 130);
+    flex: 0.1;
+}
+.skip:not(:has(button[disabled])) .skipButton {
+    background-color: rgb(39, 39, 39);
+}
+
+
+/* Styling Text Area */
+.inputField textarea {
+    margin-top: 40px;
+    margin-bottom: 60px;
+    width: 250px;
+    height: 40px;
+    min-height: 43px;
+    max-height: 255px;
+    resize: vertical;
+    padding: 12px;
+    border: 1.6px solid;
+    box-shadow: none;
+    border-color: var(--border-color);
+    background: var(--card-background-color);
+    transition-property: border-color, box-shadow;
+    transition-duration: 0.2s;
+}
+.inputField textarea + p {
+    background: var(--card-background-color);
+    color: rgb(170, 170, 170);
+    display: inline-block;
+    position: absolute;
+    pointer-events: none;
+    padding: 0 4px;
+    transition: all 0.2s;
+    left: 50px;
+    top: calc(var(--height) + 163px);
+}
+.inputField textarea:focus {
+    border-color: blue;
+    box-shadow: 0 0 2px 2px rgba(0, 0, 255, 0.190);
+}
+.inputField textarea:focus + p {
+    color: blue;
+    top: calc(var(--height) + 142px);
+}
+.inputField textarea:not(:placeholder-shown) + p {
+    top: calc(var(--height) + 142px);
+}
+
+
+/* Image Crop Model */
+.modelContainer {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.6);
+    width: 100%;
+    height: 100%;
+}
+.modelContainer .model {
+    padding: 10px;
+    background-color: var(--card-background-color);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+}
+.model div {
+    display: flex;
+    flex-direction: column;
+}
+.modelContainer button {
+    margin-top: 20px;
+    align-self: center;
+    width: 100px;
+    border: none;
+    height: 20px;
+    border-radius: 10px;
+    position: relative;
+    background-color: black;
+    color: white;
+    top: 0;
+    transition: all 0.2s;
+}
+.modelContainer button:hover {
+    background-color: blue;
+    top: -3px;
+}
+.modelContainer canvas {
+    display: none;
+}
+
+
+/* Hints */
+.hints {
+    margin-top: 30px;
+    margin-bottom: -20px;
+    display: flex;
+    justify-content: space-between;
+}
+.hints p {
+    font-size: 14.5px;
+
+}
+.card .link {
+    display: inline;
+    color: blue;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+.card .link:hover {
+    color: white;
+    background-color: blue;
+    padding: 2px 0;
+}
+.card .link::selection {
+    background: none;
+}
+
+
+/* Confirm Email */
+.userData {
+    display: flex;
+    align-items: center;
+}
+.userDataOuter {
+    display: flex;
+    flex-direction: column;
+}
+.userData img {
+    width: 80px;
+    border: 1.6px solid var(--border-color);
+    border-radius: 50%;
+}
+.userData .userDataText {
+    margin-top: -10px;
+    margin-left: 10px;
+    align-self: center;
+}
+.userDataText h2 {
+    font-family: RobotoCondensed-Regular;
+}
+.userDataText p {
+    font-family: RobotoCondensed-Light;
+    color: rgb(128, 128, 128);
+    align-self:self-start;
+    margin-top: -20px;
+}
+.userDataText p::before {
+    content: '@';
+}
+.userData + p {
+    align-self: center;
+    font-family: RobotoCondensed-Regular;
+    background-color: rgb(229, 229, 229);
+    font-size: 14.5px;
+    text-align: left;
+}
+
+
+/* Quick Confirm Email */
+.card .reset {
+    position: relative;
+    top: -16px;
+    right: 2px;
+    text-align: right;
+    font-size: 14.5px;
+    
+}
+.card .reset span {
+    color: rgb(170, 170, 170);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.card .reset:hover span {
+    padding: 0 20px;
+    background-color: rgb(219, 219, 219);
+    color: rgb(48, 48, 48);
+}

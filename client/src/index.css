@@ -1,0 +1,38 @@
+@font-face {
+    font-family: Epilogue-LightItalic;
+    src: url(assets/fonts/Epilogue-LightItalic.ttf);
+}
+@font-face {
+    font-family: Epilogue-Regular;
+    src: url(assets/fonts/Epilogue-Regular.ttf);
+}
+@font-face {
+    font-family: Epilogue-SemiBold;
+    src: url(assets/fonts/Epilogue-SemiBold.ttf);
+}
+@font-face {
+    font-family: RobotoCondensed-Light;
+    src: url(assets/fonts/RobotoCondensed-Light.ttf);
+}
+@font-face {
+    font-family: RobotoCondensed-Regular;
+    src: url(assets/fonts/RobotoCondensed-Regular.ttf);
+}
+@font-face {
+    font-family: Montserrat-Regular;
+    src: url(assets/fonts/Montserrat-Regular.ttf);
+}
+:root{
+    --default-color: rgb(32, 32, 32);
+}
+*{
+    font-family: Epilogue-Regular;
+    color: var(--default-color);
+    box-sizing: border-box;
+}
+a{
+    color: blue;
+}
+h1{
+    font-family: Epilogue-SemiBold;
+}
