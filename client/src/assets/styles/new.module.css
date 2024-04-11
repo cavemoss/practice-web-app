@@ -1,0 +1,88 @@
+.overlay {
+    position: absolute;
+    overflow: scroll;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.200);
+    z-index: 3;
+}
+.overlay .card {
+    width: 650px;
+    position: relative;
+    padding: 16px;
+    left: 50%;
+    margin: 80px 0;
+    transform: translateX(-50%);
+    background-color: var(--card-background-color);
+}
+.overlay .card textarea {
+    border: 1px solid;
+    padding-right: 18px;
+    margin-top: 15px;
+    resize: vertical;
+    min-height: 40px;
+    max-height: 300px;
+    border: none;
+    width: 100%;
+    background-color: var(--card-background-color);
+}
+.overlay .card textarea:not(:placeholder-shown) {
+    font-family: Montserrat-Regular;
+}
+.overlay .card .fileInputs {
+    padding-top: 12px;
+    width: 100%;
+    display: flex;
+    gap: 15px;
+}
+.overlay .card .fileInputs input[type='file'] {
+    display: none;
+}
+.overlay .card .fileInputs span {
+    font-family: RobotoCondensed-Regular;
+    padding: 3px 0;
+    transition: all 0.1s;
+}
+.overlay .card  .fileInputs span:hover {
+    cursor: pointer;
+    color: var(--card-background-color);
+    background-color: var(--default-color);
+    padding: 3px 10px;
+    transition: all 0.1s;
+}
+.overlay .card .fileInputs button {
+    margin-left: auto;
+    width: 100px;
+}
+
+.media video {
+    width: 100%;
+    max-height: 400px;
+}
+
+.media .videoWrapper {
+    width: 100%;
+    background-color: black;
+    align-items: center;
+    flex-direction: column;
+}
+
+.imageFlex {
+    display: flex;
+    justify-content: space-around;
+    row-gap: 12px;
+    
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+.imageFlex img{
+    cursor: pointer;
+    object-fit: cover;
+    border-radius: 10%;
+    width: 48%;
+    aspect-ratio : 1 / 1;
+    height: auto;
+    overflow-wrap: break-word;
+}

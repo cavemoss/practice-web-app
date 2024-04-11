@@ -110,7 +110,7 @@ export default function NewPassword() {
 
                     <div className={css.hints}>
                         <p>Login <span className={css.link} onClick={() => navigate('/login')}>here</span></p>
-                        <p>Proceed as a <span className={css.link} onClick={() => navigate('/wild')}>guest</span></p>
+                        <p>Proceed as a <span className={css.link} onClick={() => navigate('/posts')}>guest</span></p>
                     </div>
                 </form>
             </div>

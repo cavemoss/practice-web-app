@@ -1,19 +1,34 @@
-import css from "../assets/styles/pages.module.css"
+import css from '../assets/styles/pages.module.css'
+import { useNavigate } from 'react-router-dom'
 
 export default function UserInfo(props) {
+    const user = props.data
 
-    if(!props.user) return(<></>)
+    const navigate = useNavigate()
 
-    return(
+    if(user) return(
         <>
-            <div className={css.userInfo}>
-                <img src={props.user.picture} />
-                <div className={css.info}>
-                    <h3>{props.user.name || props.user.username}</h3>
-                    <p>{props.user.username}</p>
+            <div className={(props.small) ? (css.userInfoSmall) : (css.userInfo)} onClick={() => navigate(`/profile/${user.username}`)}>
+                <img src={user.picture} />
+                <div>
+                    <h2 id={css.name}>{user.name || user.username}</h2>
+                    <p id={css.username}>{user.username}</p>
                 </div>
-                {(props.displayDate) ? (<p className={css.date}>{new Date(props.displayDate).toLocaleString()}</p>) : (<></>)}
+                {
+                    (props.withBio)? 
+                    (
+                        <p className={css.bio}><span>{user.bio}</span></p>
+                    ):
+                    (<></>)
+                }
+                {
+                    (props.date)?
+                    (
+                        <p className={css.date}>{new Date(props.date).toLocaleString()}</p>
+                    ):
+                    (<></>)
+                }
             </div>
         </>
-    )
+    ) 
 }

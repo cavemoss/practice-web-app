@@ -13,8 +13,10 @@ import ResetPassword from './auth/ResetPassword'
 import NewPassword from './auth/NewPassword'
 import Logout from './auth/Logout.jsx'
 // Pages
-import Wild from './pages/Wild.jsx'
-import Profile from './pages/Profile.jsx'
+import Base from './pages/Base.jsx'
+import WildPosts from './pages/WildPosts.jsx'
+import WildPeople from './pages/WildPeople.jsx'
+import ProfilePage from './pages/ProfilePage.jsx'
 import ViewPost from './pages/ViewPost.jsx'
 
 const router = createBrowserRouter([
@@ -28,10 +30,12 @@ const router = createBrowserRouter([
     {path: '/login/reset-password/new-password', element: <NewPassword />},
     {path: '/logout', element: <Logout />},
     // Pages
-    {path: '/wild/posts', element: <Wild display='posts'/>}, 
-    {path: '/wild/users', element: <Wild display='users'/>}, 
-    {path: '/profile/:username', element: <Profile />}, 
-    {path: '/post/:id', element: <ViewPost />}, 
+    {path: '/', element: <Base />, children: [
+        {path: '/posts', element: <WildPosts />},
+        {path: '/people', element: <WildPeople />},
+        {path: '/profile/:username', element: <ProfilePage />},
+        {path: '/post/:id', element: <ViewPost />},
+    ]}
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(

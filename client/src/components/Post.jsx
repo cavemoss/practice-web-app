@@ -1,117 +1,80 @@
-import { createContext, useEffect, useRef, useState } from "react"
-import placeholder from "../assets/icons/placeholder.webp"
-import NewRef from "./NewRef"
-import css from "../assets/styles/pages.module.css"
-import axios from "axios"
-import UserInfo from "./UserInfo.jsx"
-
-export const newReferencePostContext = createContext()
+import { useEffect, useState } from 'react'
+import css from '../assets/styles/pages.module.css'
+import { useNavigate } from 'react-router-dom'
+import UserInfo from './UserInfo.jsx'
+import Footer from './Footer.jsx'
+import ImagesFlex from './ImagesFlex.jsx'
+import axios from 'axios'
 
 export default function Post(props) {
 
-    const [content, setContent] = useState(null)
-    const selfRef = useRef()
-    
-    async function like() {
-        let response = await axios.put(`/backend/pages/like?id=${props.postId}`)
-        response = response.data
-        if(response.message) alert(response.httpStatus)
-        else window.location.reload()
-    }
+    const navigate = useNavigate()
 
-    const [modelOpen, setModelOpen] = useState(false)
-    const [newPostContent, setNewPostContent] = useState({body: null})
-    const context = {
-        setModelOpen,
-        newPostContent,
-        setNewPostContent,
-        createNewPost
-    }
+    const [content, setContent] = useState()
 
-    async function createNewPost(event) {
-        event.preventDefault()
-
-        let response = await axios.post(`/backend/pages/create-new-reference?id=${props.postId}`, {body: newPostContent.body})
-        response = response.data
-        if(response.message) alert(response.httpStatus)
-        else window.location.reload()
-    }
+    const [postDeleted, setPostDeleted] = useState(false)
 
     async function populatePost() {
-        let response = await axios.get(`/backend/pages/populate-post?id=${props.postId}`)
+        let response = await axios.get(`/backend/pages/populate-post?id=${props.post_id}`)
         response = response.data
-
         if(response.message) alert(response.httpStatus)
-        else {
-            if(response.data.op == null) {
-                let response = await axios.delete(`/backend/pages/delete-ownerless-post?id=${props.postId}`)
-                response = response.data
-                if(response.message) alert(response.httpStatus)
-                else selfRef.current.style.display = 'none'
-            } else {
-                setContent(response.data)
-            }
-        }
+        else setContent(response.data)
     }
 
     useEffect(() => {
         populatePost()
     }, [])
 
-    if(!content) return(<></>)
+    function displayMedia() {
+        if(content.video)  return(
+            <div className={css.videoWrapper}>
+                <video controls>
+                    <source src={content.video}></source>
+                </video>
+            </div>
+        ) 
+        else if(content.images) return(<ImagesFlex images={content.images} />)
+    }
 
-    return(
+    function displayReference() {
+        if(content.reference) if(!props.reference) return(
+            <Post post_id={content.reference._id} reference />
+        )
+        else return(<></>)
+    }
+
+    if(content) return(
         <>
-            <div className={css.post} ref={selfRef}>
+            <div
+            style={{ maxWidth: props.width, display: (postDeleted) ? 'none' : 'block' }}
+            className={css.post} 
+            id={(props.static) ? (css.static) : ('')}>
 
-                <UserInfo user={content.op} displayDate={content.published} />
+                <div onClick={() => navigate(`/post/${content._id}`)}>
+                    <UserInfo data={content.op} date={content.published} />
+                </div>
 
-                <div className={css.body} onClick={props.onClick}>{content.body}</div>
+                <div className={css.body} onClick={() => navigate(`/post/${content._id}`)}>
+                    {content.body}
+                </div>
 
                 <div className={css.media}>
-                    {
-                        (content.video) ?
-                        (
-                            <video controls >
-                                <source src={content.video} type="video/mp4" />
-                            </video>
-                        ):
-                        (<></>)
-                    }
-                </div>
-                
-                <div className={css.reference} onClick={props.onClick}>
-                    {
-                        (content.reference) ?
-                        (
-                            (props.isReference) ?
-                            (
-                                <p id={css.ref}>reference to another post...</p>
-                            ) :
-                            (
-                                <Post 
-                                    key={content.reference._id} 
-                                    postId={content.reference._id} 
-                                    onClick={() => navigate(`/post/${content.reference._id}`)} 
-                                    isReference={true}
-                                />
-                            )
-                        ) :
-                        (<></>)
-                    }
+                    {displayMedia()}
                 </div>
 
-                <div className={css.footer} style={{pointerEvents: (props.isReference) ? ('none') : ('all')}}>
-                    <i class="fa-solid fa-comment" id={css.iconC}><span style={{display: (content.comments.length > 0) ? ('inline') : ('none')}}>{content.comments.length}</span></i>
-                    <i class="fa-solid fa-heart" id={css.iconL} onClick={like}><span style={{display: (content.likes.length > 0) ? ('inline') : ('none')}}>{content.likes.length}</span></i>
-                    <i class="fa-solid fa-retweet" id={css.iconR} onClick={() => setModelOpen(true)}><span>{content.reposts.length}</span></i>
+                {(content.reference) ? (<p id={css.ref}>reference</p>) : (<></>)}
+                <div className={css.reference} onClick={() => navigate(`/post/${content.reference._id}`)}>
+                    {displayReference()}
                 </div>
                 
+                <Footer 
+                post_id={props.post_id}
+                delete={setPostDeleted}
+                op={content.op.username}
+                likes={content.likes} 
+                comments={content.comments} 
+                reposts={content.reposts}/>
             </div>
-
-            <newReferencePostContext.Provider value={context}>
-                {(modelOpen) ? (<NewRef />) : (<></>)}
-            </newReferencePostContext.Provider>
         </>
     )
 }

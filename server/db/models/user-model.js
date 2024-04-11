@@ -102,7 +102,7 @@ export async function selectUser(userInfo){
         ...userData._doc,
         following: following,
         followers: followers,
-        posts: posts,
+        posts: posts.reverse(),
 
         editProfile: async (update) => await UserModel.updateOne(userInfo, update),
 
@@ -158,7 +158,7 @@ export async function selectUser(userInfo){
             const targetData = await selectPost(targetPost_id)
             if(!content) content = {}
 
-            function findDuplicates(element){
+            function findDuplicates(element) {
                 return element.op.toString() == userData._id.toString()
             }
 
@@ -167,7 +167,8 @@ export async function selectUser(userInfo){
                 const newPost = await new PostModel({
                     op: userData._id,
                     body: content.body,
-                    media: content.media,
+                    images: content.images,
+                    video: content.video,
                     reference: targetPost_id
                 }).save()
 
@@ -247,7 +248,7 @@ export async function selectUser(userInfo){
             try {
                 const targetData = await selectComment(targetComment_id)
                 
-                if(targetData.author._id.toString() == userData._id.toString() && targetData.post.comments.includes(targetData._id)) {
+                if(targetData.author._id.toString() == userData._id.toString()) {
                     await CommentModel.deleteOne({_id: targetComment_id})
                 }
 

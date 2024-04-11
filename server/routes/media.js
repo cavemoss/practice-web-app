@@ -1,6 +1,7 @@
 import express from 'express'
 import multer from 'multer'
 import crypto from 'crypto'
+import Response from '../middleware/response.js'
 import { GridFsStorage } from 'multer-gridfs-storage'
 import Grid from 'gridfs-stream'
 import verifyUser from '../middleware/session.js'
@@ -8,7 +9,6 @@ import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import path from 'path'
 import { selectUser } from '../db/models/user-model.js'
-
 dotenv.config()
 const media = express.Router()
 
@@ -42,14 +42,15 @@ let storage = new GridFsStorage({
 let upload = multer({ storage })
 
 
-media.post('/post', verifyUser, upload.single('file'), async (request, response) => {
+media.post('/new-post', verifyUser, async (request, response) => {
 
     try{
         const user = await selectUser({username: request.payload.username})
-        await user.post({
-            body: request.body.text, 
-            video: `http://localhost:8000/backend/media/file/${request.file.filename}`
-        })
+        const content = {body: request.body.text}
+
+        if(request.query.id) await user.repost(request.query.id, content)
+        else await user.post(content)
+      
         response.send(new Response(200, 'OK'))  // new Response
     } catch (error) {
         console.log(error)
@@ -57,11 +58,54 @@ media.post('/post', verifyUser, upload.single('file'), async (request, response)
     }
 })
 
-media.get('/video/:filename', async (request, response) => {
+media.post('/new-post-video', verifyUser, upload.single('video'), async (request, response) => {
+
+    try{
+        const user = await selectUser({username: request.payload.username})
+        const content = {
+            body: request.body.text, 
+            video: `http://localhost:${process.env.PORT}/backend/media/${request.file.filename}`
+        }
+
+        if(request.query.id) await user.repost(request.query.id, content)
+        else await user.post(content)
+
+        response.send(new Response(200, 'OK'))  // new Response
+    } catch (error) {
+        console.log(error)
+        response.send(new Response(500, 'Internal Server Error', error))  // new Response
+    }
+})
+
+media.post('/new-post-images', verifyUser, upload.array('images'), async (request, response) => {
+
+    try{
+        const user = await selectUser({username: request.payload.username})
+
+        let imgArray = []
+        for (let i = 0; i < request.files.length; i++) {
+            imgArray.push(`http://localhost:${process.env.PORT}/backend/media/${request.files[i].filename}`)
+        }
+
+        const content = {
+            body: request.body.text, 
+            images: imgArray
+        }
+
+        if(request.query.id) await user.repost(request.query.id, content)
+        else await user.post(content)
+
+        response.send(new Response(200, 'OK'))  // new Response
+    } catch (error) {
+        console.log(error)
+        response.send(new Response(500, 'Internal Server Error', error))  // new Response
+    }
+})
+
+media.get('/:filename', async (request, response) => {
     const file = await gfs.files.findOne({ filename: request.params.filename });
     const readstream = gridFsBucket.openDownloadStream(file._id)
     readstream.pipe(response)
 })
-
 
 export default media

@@ -77,7 +77,7 @@ export default function Login(){
             else if(response.statusCode === 401) setEmailError({inputFieldError: css.inputFieldError, errorMessage: `Email is not verified. Please Sign Up and verify email`})
             else alert(response.httpStatus)
         } else {
-            navigate('/wild')
+            navigate('/posts')
         }
     }
 
@@ -111,7 +111,7 @@ export default function Login(){
 
                     <div className={css.hints}>
                         <p>Sign up <span className={css.link} onClick={() => navigate('/sign-up')}>here</span></p>
-                        <p>Proceed as a <span className={css.link} onClick={() => navigate('/wild')}>guest</span></p>
+                        <p>Proceed as a <span className={css.link} onClick={() => navigate('/posts')}>guest</span></p>
                     </div>
                 </form>
             </div>
