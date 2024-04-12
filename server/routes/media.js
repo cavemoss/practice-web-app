@@ -9,10 +9,12 @@ import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import path from 'path'
 import { selectUser } from '../db/models/user-model.js'
+
 dotenv.config()
 const media = express.Router()
 
 
+// GridFS Multer upload engine configuration
 let gfs, gridFsBucket
 let connection = mongoose.connection
 
@@ -42,6 +44,10 @@ let storage = new GridFsStorage({
 let upload = multer({ storage })
 
 
+/**
+ * @method POST
+ * @desc Create a post containing plain text
+ */
 media.post('/new-post', verifyUser, async (request, response) => {
 
     try{
@@ -58,6 +64,10 @@ media.post('/new-post', verifyUser, async (request, response) => {
     }
 })
 
+/**
+ * @method POST
+ * @desc Create a post containing a video source link
+ */
 media.post('/new-post-video', verifyUser, upload.single('video'), async (request, response) => {
 
     try{
@@ -77,6 +87,10 @@ media.post('/new-post-video', verifyUser, upload.single('video'), async (request
     }
 })
 
+/**
+ * @method POST
+ * @desc Create a post containing an array of image source links
+ */
 media.post('/new-post-images', verifyUser, upload.array('images'), async (request, response) => {
 
     try{
@@ -102,6 +116,10 @@ media.post('/new-post-images', verifyUser, upload.array('images'), async (reques
     }
 })
 
+/**
+ * @method POST
+ * @desc Provides media source link
+ */
 media.get('/:filename', async (request, response) => {
     const file = await gfs.files.findOne({ filename: request.params.filename });
     const readstream = gridFsBucket.openDownloadStream(file._id)

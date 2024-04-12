@@ -8,10 +8,11 @@ import { selectComment } from '../db/models/comment-model.js'
 const ObjectId = mongoose.Types.ObjectId
 const pages = express.Router()
 
-pages.get('/fetch-backend-data', verifyUser, async (request, response) => {
 
+pages.get('/fetch-backend-data', verifyUser, async (request, response) => {
+    
     try {
-        const user = await selectUser({username: request.payload.username})
+        if(request.payload) var user = await selectUser({username: request.payload.username})
         const people = await UserModel.find().sort({created:-1})
         const posts = await PostModel.find().sort({published:-1})
         response.send(new Response(200, 'OK', null, {user, people, posts}))
@@ -81,9 +82,15 @@ pages.get('/populate-comment', async (request, response) => {
 pages.put('/like', verifyUser, async (request, response) => {
 
     try{
-        const user = await selectUser({username: request.payload.username})
-        await user.like(new ObjectId(request.query.id))
-        response.send(new Response(200, 'OK'))  // new Response
+        
+        if(request.payload) {
+
+            const user = await selectUser({username: request.payload.username})
+            await user.like(new ObjectId(request.query.id))
+            response.send(new Response(200, 'OK'))  // new Response
+
+        } else response.send(new Response(401, 'Unauthorized', 'Login required'))  // new Response 
+
     } catch (error) {
         console.log(error)
         response.send(new Response(500, 'Internal Server Error', error))  // new Response
@@ -93,9 +100,15 @@ pages.put('/like', verifyUser, async (request, response) => {
 pages.put('/like-comment', verifyUser, async (request, response) => {
 
     try{
-        const user = await selectUser({username: request.payload.username})
-        await user.likeComment(new ObjectId(request.query.id))
-        response.send(new Response(200, 'OK'))  // new Response
+
+        if(request.payload) {
+
+            const user = await selectUser({username: request.payload.username})
+            await user.likeComment(new ObjectId(request.query.id))
+            response.send(new Response(200, 'OK'))  // new Response
+
+        } else response.send(new Response(401, 'Unauthorized', 'Login required'))  // new Response 
+
     } catch (error) {
         console.log(error)
         response.send(new Response(500, 'Internal Server Error', error))  // new Response
@@ -117,24 +130,51 @@ pages.get('/follow', verifyUser, async (request, response) => {
     }
 })
 
-media.post('/leave-comment', verifyUser, async (request, response) => {
+pages.post('/leave-comment', verifyUser, async (request, response) => {
 
     try{
-        const user = await selectUser({username: request.payload.username})
-        await user.comment(request.query.id, request.body.text)
-        response.send(new Response(200, 'OK'))  // new Response
+
+        if(request.payload) {
+
+            const user = await selectUser({username: request.payload.username})
+            await user.comment(request.query.id, request.body.text)
+            response.send(new Response(200, 'OK'))  // new Response
+
+        } else response.send(new Response(401, 'Unauthorized', 'Login required'))  // new Response 
+
     } catch (error) {
         console.log(error)
         response.send(new Response(500, 'Internal Server Error', error))  // new Response
     }
 })
 
-media.post('/leave-reply', verifyUser, async (request, response) => {
+pages.post('/leave-reply', verifyUser, async (request, response) => {
 
     try{
-        const user = await selectUser({username: request.payload.username})
-        await user.reply(new ObjectId(request.query.id), request.body.text)
-        response.send(new Response(200, 'OK'))  // new Response
+        
+        if(request.payload) {
+
+            const user = await selectUser({username: request.payload.username})
+            await user.reply(new ObjectId(request.query.id), request.body.text)
+            response.send(new Response(200, 'OK'))  // new Response
+
+        } else response.send(new Response(401, 'Unauthorized', 'Login required'))  // new Response 
+        
+    } catch (error) {
+        console.log(error)
+        response.send(new Response(500, 'Internal Server Error', error))  // new Response
+    }
+})
+
+pages.get('/get-people', async (request, response) => {
+
+    try{
+        const user = await selectUser({username: request.query.of})
+        switch(request.query.who) {
+            case 'followers': var people = user.followers; break
+            case 'following': var people = user.following
+        }
+        response.send(new Response(200, 'OK', null, people))  // new Response 
     } catch (error) {
         console.log(error)
         response.send(new Response(500, 'Internal Server Error', error))  // new Response

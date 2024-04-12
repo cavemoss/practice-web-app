@@ -2,9 +2,6 @@ import mongoose from "mongoose"
 import PostModel, { selectPost } from "./post-model.js"
 import CommentModel, { selectComment } from "./comment-model.js"
 
-export const EMAIL_REG =  /[A-Za-z0-9\._%+\-]+@[A-Za-z0-9\.\-]+\.[A-Za-z]{2,}/
-export const PWD_REG = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}/
-
 // Define Schema
 const UserSchema = new mongoose.Schema({
     
@@ -35,7 +32,6 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        validate: email => EMAIL_REG.test(email)
     },
 
     emailVerified: {
@@ -46,7 +42,6 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        validate: pwd => PWD_REG.test(pwd)
     },
 
     following: [

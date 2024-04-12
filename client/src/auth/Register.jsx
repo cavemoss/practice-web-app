@@ -6,7 +6,8 @@ import eyeClosed from '../assets/icons/eye-off-svgrepo-com.svg'
 import axios from 'axios'
 
 
-export const NAME_REG = /^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/
+export const NAME_REG = /^.{1,40}$/
+export const USERNAME_REG = /^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/
 export const EMAIL_REG =  /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 export const PWD_REG = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}/
 
@@ -15,6 +16,7 @@ export default function Register() {
     const navigate = useNavigate()
 
     const [usernameError, setUsernameError] = useState({inputFieldError: null, errorMessage: ''})
+    const [nameError, setNameError] = useState({inputFieldError: null, errorMessage: ''})
     const [emailError, setEmailError] = useState({inputFieldError: null, errorMessage: ''})
     const [passwordError, setPasswordError] = useState({inputFieldError: null, errorMessage: ''})
     const [repeatPwdError, setRepeatPwdError] = useState({inputFieldError: null, errorMessage: ''})
@@ -42,6 +44,7 @@ export default function Register() {
     }
 
     function onChangeName(event) {setUserInput({...userInput, name: event.target.value})}
+    useEffect(() => setNameError({inputFieldError: null, errorMessage: ''}), [userInput.name])
 
     function onChangeUsername(event) {setUserInput({...userInput, username: event.target.value})}
     useEffect(() => setUsernameError({inputFieldError: null, errorMessage: ''}), [userInput.username])
@@ -58,12 +61,17 @@ export default function Register() {
     async function handelSubmit(event) {
         event.preventDefault()
 
+        if(!NAME_REG.test(userInput.name)) {
+            setNameError({inputFieldError: css.inputFieldError, errorMessage: `This name is too long`})
+            return
+        }
+
         if(!userInput.username) {
             setUsernameError({inputFieldError: css.inputFieldError, errorMessage: `Enter username`})
             return
         }
         
-        else if(!NAME_REG.test(userInput.username)) {
+        else if(!USERNAME_REG.test(userInput.username)) {
             setUsernameError({inputFieldError: css.inputFieldError, errorMessage: `Invalid username`})
             return
         }
@@ -123,11 +131,12 @@ export default function Register() {
 
                     <br />
 
-                    <div>
+                    <div id={nameError.inputFieldError}>
                         <div className={css.inputField}>
                             <input onChange={onChangeName} placeholder="not required" />
                             <p>Your Name</p>
                         </div>
+                        <div className={css.errorMessage}>{nameError.errorMessage}</div>
                     </div>
 
                     <br />

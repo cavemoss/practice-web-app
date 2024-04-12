@@ -22,14 +22,15 @@ export default function Comment(props) {
     }, [])
 
     if(content) return(
-        <div style={{display: (commentDeleted) ? 'none' : 'block'}}>
+        <div style={{display: commentDeleted? 'none' : 'block'}}>
             <div className={css.comment}>
-                <div className={css.header}>
-                    <UserInfo data={content.author} small />
+                <div className={css.commentHeader}>
+                    <UserInfo data={content.author} small maxWidth='133px'/>
                 </div>
                 <div className={css.commentBody}>
                     <div className={css.body}>{content.body}</div>
                     <Footer
+                    pointer='all'
                     forComment
                     author={content.author.username}
                     comment_id={props.comment_id}

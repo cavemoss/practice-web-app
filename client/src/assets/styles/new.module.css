@@ -5,7 +5,7 @@
     left: 0;
     bottom: 0;
     right: 0;
-    background-color: rgba(0, 0, 0, 0.200);
+    background-color: rgba(0, 0, 0, 0.300);
     z-index: 3;
 }
 .overlay .card {
@@ -22,7 +22,7 @@
     padding-right: 18px;
     margin-top: 15px;
     resize: vertical;
-    min-height: 40px;
+    min-height: 50px;
     max-height: 300px;
     border: none;
     width: 100%;
@@ -31,28 +31,32 @@
 .overlay .card textarea:not(:placeholder-shown) {
     font-family: Montserrat-Regular;
 }
-.overlay .card .fileInputs {
+.fileInputs {
     padding-top: 12px;
     width: 100%;
     display: flex;
     gap: 15px;
 }
-.overlay .card .fileInputs input[type='file'] {
+.fileInputs input[type='file'] {
     display: none;
 }
-.overlay .card .fileInputs span {
+.fileInputs span {
     font-family: RobotoCondensed-Regular;
     padding: 3px 0;
     transition: all 0.1s;
 }
-.overlay .card  .fileInputs span:hover {
+.fileInputs span:hover {
     cursor: pointer;
     color: var(--card-background-color);
     background-color: var(--default-color);
     padding: 3px 10px;
     transition: all 0.1s;
 }
-.overlay .card .fileInputs button {
+.fileInputs #disabled {
+    pointer-events: none;
+    color: grey;
+}
+.fileInputs button {
     margin-left: auto;
     width: 100px;
 }
@@ -63,6 +67,7 @@
 }
 
 .media .videoWrapper {
+    margin-top: 12px;
     width: 100%;
     background-color: black;
     align-items: center;
@@ -73,7 +78,7 @@
     display: flex;
     justify-content: space-around;
     row-gap: 12px;
-    
+    margin-top: 12px;
     flex-wrap: wrap;
     align-items: baseline;
 }
@@ -85,4 +90,31 @@
     aspect-ratio : 1 / 1;
     height: auto;
     overflow-wrap: break-word;
+}
+.text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.text p {
+    font-family: RobotoCondensed-Regular;
+}
+.text span {
+    font-family: RobotoCondensed-Regular;
+    padding: 3px 0;
+    transition: all 0.1s;
+}
+.text span:hover {
+    cursor: pointer;
+    color: var(--card-background-color);
+    background-color: var(--default-color);
+    padding: 3px 10px;
+    transition: all 0.1s;
+}
+
+@media screen and (max-width: 600px) {
+    .overlay .card {
+        margin: 40px 0;
+        width: 100%;
+    }
 }

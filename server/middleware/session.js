@@ -8,7 +8,7 @@ export default function verifyUser(request, response, next) {
 
     const token = request.cookies.session
 
-    if(!token) return
+    if(!token) next()
     else {
         jsonwebtoken.verify(token, process.env.JWT_KEY, 
 

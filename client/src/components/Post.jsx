@@ -33,7 +33,11 @@ export default function Post(props) {
                 </video>
             </div>
         ) 
-        else if(content.images) return(<ImagesFlex images={content.images} />)
+        else if(content.images) return(
+            <div onClick={() => navigate(`/post/${content.reference._id}`)}>
+                <ImagesFlex images={content.images} />
+            </div>
+        )
     }
 
     function displayReference() {
@@ -47,14 +51,15 @@ export default function Post(props) {
         <>
             <div
             style={{ maxWidth: props.width, display: (postDeleted) ? 'none' : 'block' }}
+            onClick={() => navigate(`/post/${content._id}`)}
             className={css.post} 
-            id={(props.static) ? (css.static) : ('')}>
+            id={props.static? css.static : null}>
 
-                <div onClick={() => navigate(`/post/${content._id}`)}>
+                <div>
                     <UserInfo data={content.op} date={content.published} />
                 </div>
 
-                <div className={css.body} onClick={() => navigate(`/post/${content._id}`)}>
+                <div className={css.body}>
                     {content.body}
                 </div>
 
@@ -63,11 +68,12 @@ export default function Post(props) {
                 </div>
 
                 {(content.reference) ? (<p id={css.ref}>reference</p>) : (<></>)}
-                <div className={css.reference} onClick={() => navigate(`/post/${content.reference._id}`)}>
+                <div className={css.reference} onClick={(event) => event.stopPropagation()}>
                     {displayReference()}
                 </div>
                 
                 <Footer 
+                pointer={props.reference? 'none' : 'auto'}
                 post_id={props.post_id}
                 delete={setPostDeleted}
                 op={content.op.username}

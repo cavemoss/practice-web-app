@@ -1,4 +1,4 @@
-export default class Response {
+export default class {
     constructor(statusCode, httpStatus, message, data){
         this.timeStamp = new Date().toLocaleString()
         this.statusCode = statusCode

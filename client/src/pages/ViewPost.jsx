@@ -24,7 +24,7 @@ export default function ViewPost() {
 
     if(content) return(
         <>
-            <div style={{width: '800px'}}>
+            <div className={css.postContainer}>
                 <Post post_id={id} static width='auto'/>
                 <div className={css.commentSection}>
                     {content.comments.map(doc => <Comment key={doc._id} comment_id={doc._id} />)}

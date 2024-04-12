@@ -6,17 +6,20 @@ import repost from '../assets/icons/retweet-solid.svg'
 import trash from '../assets/icons/trash-can-regular.svg'
 import { overlayContext } from '../pages/Base.jsx'
 import { useContext, useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 
 export default function Footer(props) {
 
+    const navigate = useNavigate()
+
     const { user } = useContext(backendDataContext)
 
     const { 
-        setNewRef, 
-        setReference_id, 
-        setNewComment, 
+        setNewRef,
+        setReference_id,
+        setNewComment,
         setPost_id,
         setNewReply,
         setComment_id,
@@ -29,16 +32,19 @@ export default function Footer(props) {
     const deleteCommentRef = useRef()
 
     const [stats, setStats] = useState({
-        replies:  (props.replies) ? (props.replies.length) : (null),
-        comments: (props.comments) ? (props.comments.length) : (null),
-        reposts: (props.reposts) ? (props.reposts.length) : (null),
+        replies:  props.replies? props.replies.length : null,
+        comments: props.comments? props.comments.length : null,
+        reposts: props.reposts? props.reposts.length : null,
         likes: props.likes.length
     })
 
     async function like() {
         let response = await axios.put(`/backend/pages/like?id=${props.post_id}`)
         response = response.data
-        if(response.message) alert(response.httpStatus)
+        if(response.message) {
+            if(response.statusCode === 401) return
+            else alert(response.httpStatus)
+        }
         else {
             if(!liked) {
                 setStats({...stats, likes: stats.likes += 1})
@@ -53,7 +59,10 @@ export default function Footer(props) {
     async function likeComment() {
         let response = await axios.put(`/backend/pages/like-comment?id=${props.comment_id}`)
         response = response.data
-        if(response.message) alert(response.httpStatus)
+        if(response.message) {
+            if(response.statusCode === 401) return
+            else alert(response.httpStatus)
+        }
         else {
             if(!liked) {
                 setStats({...stats, likes: stats.likes += 1})
@@ -80,6 +89,9 @@ export default function Footer(props) {
     }
 
     function openOverlay(params) {
+
+        if(user === 'guest') return
+
         switch(params) {
             case 'repost': {
                 setNewRef(true)
@@ -87,6 +99,7 @@ export default function Footer(props) {
                 break
             }
             case 'comment': {
+                navigate(`/post/${props.post_id}`)
                 setNewComment(true)
                 setPost_id(props.post_id)
                 break
@@ -105,26 +118,51 @@ export default function Footer(props) {
             if(props.op) if(user.username == props.op) deletePostRef.current.style.display = 'block'
             if(props.author) if(user.username == props.author) deleteCommentRef.current.style.display = 'block'
         }
-
     }, [user])
 
     if(props.forComment) return(
         <>
             <div className={css.footer}>
-                <img className={css.icon} src={comment} onClick={() => openOverlay('reply')}/><p style={{visibility: (stats.replies > 0) ? ('visible') : ('hidden')}}>{stats.replies}</p>
-                <img className={css.icon} src={heart} onClick={likeComment}/><p style={{visibility: (stats.likes > 0) ? ('visible') : ('hidden')}}>{stats.likes}</p>
-                <img ref={deleteCommentRef} className={css.icon} src={trash} style={{display: 'none'}} onClick={deleteComment} />
+                <div className={css.icon}>
+                    <img src={comment} onClick={() => openOverlay('reply')}/>
+                    <p style={{visibility: stats.replies > 0? 'visible' : 'hidden'}}>{stats.replies}</p>
+                </div>
+
+                <div className={css.icon}>
+                    <img src={heart} onClick={likeComment}/>
+                    <p style={{visibility: stats.likes > 0? 'visible' : 'hidden'}}>{stats.likes}</p>
+                </div>
+
+                <div className={css.icon}>
+                    <img ref={deleteCommentRef} src={trash} style={{display: 'none'}} onClick={deleteComment} />
+                </div>
             </div>
         </>
     )
 
     return(
         <>
-            <div className={css.footer}>
-                <img className={css.icon} src={comment} onClick={() => openOverlay('comment')}/><p style={{visibility: (stats.comments > 0) ? ('visible') : ('hidden')}}>{stats.comments}</p>
-                <img className={css.icon} src={heart} onClick={like}/><p style={{visibility: (stats.likes > 0) ? ('visible') : ('hidden')}}>{stats.likes}</p>
-                <img className={css.icon} src={repost} onClick={() => openOverlay('repost')}/><p style={{visibility: (stats.reposts > 0) ? ('visible') : ('hidden')}}>{stats.reposts}</p>
-                <img ref={deletePostRef} className={css.icon} src={trash} style={{display: 'none'}} onClick={deletePost} />
+            <div className={css.footer} style={{pointerEvents: props.pointer? props.pointer : 'all' }}>
+
+                <div className={css.icon} onClick={event => {event.stopPropagation(); openOverlay('comment')}}>
+                    <img src={comment} />
+                    <p style={{visibility: stats.comments > 0? 'visible' : 'hidden'}}>{stats.comments}</p>
+                </div>
+
+                <div className={css.icon} onClick={event => {event.stopPropagation(); like()}}>
+                    <img src={heart} />
+                    <p style={{visibility: stats.likes > 0? 'visible' : 'hidden'}}>{stats.likes}</p>
+                </div>
+
+                <div className={css.icon} onClick={event => {event.stopPropagation(); openOverlay('repost')}}>
+                    <img src={repost} />
+                    <p style={{visibility: stats.reposts > 0? 'visible' : 'hidden'}}>{stats.reposts}</p>
+                </div>
+
+                <div className={css.icon} style={{display: 'none'}} ref={deletePostRef} onClick={event => {event.stopPropagation(); deletePost()}}>
+                    <img src={trash} />
+                </div>
+
             </div>
         </>
     )

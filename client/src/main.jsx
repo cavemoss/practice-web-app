@@ -16,7 +16,9 @@ import Logout from './auth/Logout.jsx'
 import Base from './pages/Base.jsx'
 import WildPosts from './pages/WildPosts.jsx'
 import WildPeople from './pages/WildPeople.jsx'
+import For from './pages/For.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
+import People from './pages/People.jsx'
 import ViewPost from './pages/ViewPost.jsx'
 
 const router = createBrowserRouter([
@@ -33,7 +35,10 @@ const router = createBrowserRouter([
     {path: '/', element: <Base />, children: [
         {path: '/posts', element: <WildPosts />},
         {path: '/people', element: <WildPeople />},
+        {path: '/for/:username', element: <For />},
         {path: '/profile/:username', element: <ProfilePage />},
+        {path: '/profile/:username/followers', element: <People followers />},
+        {path: '/profile/:username/follows', element: <People follows />},
         {path: '/post/:id', element: <ViewPost />},
     ]}
 ])
