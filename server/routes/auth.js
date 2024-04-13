@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import jsonwebtoken from 'jsonwebtoken'
 import Response from '../middleware/response.js'
+import ip from 'ip'
 import { jwtSession, decodeJwt, pwdReset } from '../middleware/session.js'
 import { createUser, selectUser } from '../db/models/user-model.js'
 import { PORT, transporter } from '../server.js'
@@ -68,7 +69,7 @@ auth.get('/sign-up/confirm-email', jwtSession, async (request, response) => {
                 from: process.env.AUTH_EMAIL,
                 to: user.email,
                 subject: 'Confirm Email',
-                text: `Click on this link to verify your email: http://localhost:${PORT}/backend/auth/verify?token=${token}`,
+                text: `Click on this link to verify your email: http://${process.env.DOMAIN_NAME}:80/backend/auth/verify?token=${token}`,
             })
         } catch (error) {
             console.log(error)
@@ -90,7 +91,7 @@ auth.get('/verify', decodeJwt, async (request, response) => {
         const user = await selectUser({username: request.payload.username})
         await user.editProfile({emailVerified: true}) 
         response.cookie = 'sign_up_session=null; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-        response.redirect(process.env.FRONTEND_URL + `/login/${user.email}`)
+        response.redirect(`http://${process.env.DOMAIN_NAME}:80/login/${user.email}`)
     } catch (error) {
         console.log(error)
         response.send(new Response(500, 'Internal Server Error', error))  // new Response
@@ -117,7 +118,6 @@ auth.post('/login', async (request, response) => {
                 response.send(new Response(200, 'OK'))  // new Response
             } 
             else {
-                console.log(user)
                 user.deleteProfile()
                 response.send(new Response(401, 'Unauthorized', 'Email is not verified'))  // new Response
             } 
@@ -146,7 +146,7 @@ auth.post('/login/reset-password', async (request, response) => {
                 from: process.env.AUTH_EMAIL,
                 to: user.email,
                 subject: 'Password Reset',
-                text: `Click on this link to reset password: http://localhost:${PORT}/backend/auth/reset?token=${token}`,
+                text: `Click on this link to reset password: http://${process.env.DOMAIN_NAME}:80/backend/auth/reset?token=${token}`,
             })
 
             response.send(new Response(200, 'OK'))  // new Response
@@ -169,7 +169,7 @@ auth.get('/reset', decodeJwt, async (request, response) => {
         const token = jsonwebtoken.sign({payload}, process.env.JWT_KEY, {expiresIn: '1d'})
         response.cookie('pwd_reset_session', token)
 
-        response.redirect(process.env.FRONTEND_URL + '/login/reset-password/new-password')
+        response.redirect(`http://${process.env.DOMAIN_NAME}:80/login/reset-password/new-password`)
         
     } catch (error) {
         console.log(error)

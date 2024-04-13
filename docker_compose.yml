@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+
+  client:
+    build: ./client
+    ports:
+      - 8080:8080
+
+  server:
+    build: ./server
+    ports:
+      - 8000:8000
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+
+  mongodb:
+    image: mongo:6-jammy
+    ports:
+      - '27027:27017'
+    volumes:
+      - mongodata:/data/db
+      
+volumes:
+  mongodata:

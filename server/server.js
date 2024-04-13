@@ -18,7 +18,7 @@ app.use('/backend/pages', pages)
 app.use('/backend/media', media)
 
 dotenv.config()
-export const PORT = process.env.PORT || 8080
+export const PORT = process.env.PORT || 5000
 const databaseURL = process.env.DATABASE_URL
 
 connectDB(databaseURL)

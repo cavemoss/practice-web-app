@@ -23,7 +23,7 @@ connection.once('open', () => {
     gfs = Grid(connection.db, mongoose.mongo)
     gfs.collection('uploads')
 })
-
+console.log(process.env.DATABASE_URL)
 let storage = new GridFsStorage({
     url: process.env.DATABASE_URL,
     file: (request, file) => {
@@ -74,7 +74,7 @@ media.post('/new-post-video', verifyUser, upload.single('video'), async (request
         const user = await selectUser({username: request.payload.username})
         const content = {
             body: request.body.text, 
-            video: `http://localhost:${process.env.PORT}/backend/media/${request.file.filename}`
+            video: `http://${process.env.DOMAIN_NAME}:80/backend/media/${request.file.filename}`
         }
 
         if(request.query.id) await user.repost(request.query.id, content)
@@ -98,7 +98,7 @@ media.post('/new-post-images', verifyUser, upload.array('images'), async (reques
 
         let imgArray = []
         for (let i = 0; i < request.files.length; i++) {
-            imgArray.push(`http://localhost:${process.env.PORT}/backend/media/${request.files[i].filename}`)
+            imgArray.push(`http://${process.env.DOMAIN_NAME}:80/backend/media/${request.files[i].filename}`)
         }
 
         const content = {
